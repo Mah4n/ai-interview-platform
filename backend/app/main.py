@@ -90,7 +90,7 @@ def upload_cv(
 
     new_cv = CV(user_id = current_user.id,
                 original_filename = file.filename,
-                stored_filename = stored_filename
+                stored_filename = stored_filename,
                 extracted_text = extracted_text)
 
     db.add(new_cv)
