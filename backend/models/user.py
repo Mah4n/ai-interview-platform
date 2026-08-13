@@ -11,5 +11,6 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    cv = relationship("CV", back_populates="user", uselist=False, 
-                      cascade="all, delete-orphan")
+    cv = relationship("CV", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    interviews = relationship("Interview", back_populates="user", cascade="all, delete-orphan")
+    

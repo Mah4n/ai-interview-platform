@@ -8,11 +8,14 @@ import uuid
 from database.database import Base, engine, get_db
 from models.user import User
 from models.cv import CV
+from models.interview import Interview 
 from schemas.user import UserCreate
+from schemas.interview import InterviewCreate
 from utils.auth import get_current_user
 from utils.hash import hash_password, verify_password
 from utils.jwt import create_access_token
 from utils.pdf import extract_text_from_pdf
+from utils.ai import generate_interview_questions
 
 Base.metadata.create_all(bind=engine)
 
@@ -100,4 +103,36 @@ def upload_cv(
     return {"message" : "CV uploaded successfully",
             "filename" : new_cv.original_filename}
 
-    
+@app.post("/interview/generate")
+def generate_interview(
+    interview: InterviewCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)):
+
+    cv = db.query(CV).filter(CV.user_id == current_user.id).first()
+
+    if not cv:
+        raise HTTPException(status_code= 400,
+                            detail= "Please upload a CV before generating an interview")
+
+    generated_questions = generate_interview_questions(
+        cv_text = cv.extracted_text, 
+        role = interview.role,
+        difficulty = interview.difficulty,
+        interview_type = interview.interview_type)
+
+    new_interview = Interview(
+        user_id = current_user.id,
+        role = interview.role,
+        difficulty = interview.difficulty,
+        interview_type = interview.interview_type,
+        questions = generated_questions)
+
+    db.add(new_interview)
+    db.commit()
+    db.refresh(new_interview)
+
+    return{
+        "interview_id": new_interview.id,
+        "questions": generated_questions
+    }
