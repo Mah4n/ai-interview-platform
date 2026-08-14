@@ -17,7 +17,7 @@ from utils.auth import get_current_user
 from utils.hash import hash_password, verify_password
 from utils.jwt import create_access_token
 from utils.pdf import extract_text_from_pdf
-from utils.ai import generate_interview_questions
+from utils.ai import generate_interview_questions, generate_answer_feedback
 
 Base.metadata.create_all(bind=engine)
 
@@ -160,11 +160,21 @@ def submit_answer(
 
     question = interview.questions[response.question_index]
 
+    feedback = generate_answer_feedback(
+        question=question,
+        answer=response.answer,
+        role=interview.role,
+        difficulty=interview.difficulty)
+
     new_response = InterviewResponse(
         interview_id=interview.id,
         question_index=response.question_index,
         question=question,
-        answer=response.answer)
+        answer=response.answer,
+        score=feedback["score"],
+        strengths=feedback["strengths"],
+        weaknesses=feedback["weaknesses"],
+        suggested_improvement=feedback["suggested_improvement"])
 
     db.add(new_response)
     db.commit()
@@ -174,5 +184,9 @@ def submit_answer(
         "message": "Answer submitted successfully",
         "response_id": new_response.id,
         "question": question,
-        "answer": new_response.answer
+        "answer": new_response.answer,
+        "score": new_response.score,
+        "strengths": new_response.strengths,
+        "weaknesses": new_response.weaknesses,
+        "suggested_improvement": new_response.suggested_improvement
     }
