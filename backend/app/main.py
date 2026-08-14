@@ -9,8 +9,10 @@ from database.database import Base, engine, get_db
 from models.user import User
 from models.cv import CV
 from models.interview import Interview 
+from models.interview_response import InterviewResponse
 from schemas.user import UserCreate
 from schemas.interview import InterviewCreate
+from schemas.interview_response import InterviewResponseCreate 
 from utils.auth import get_current_user
 from utils.hash import hash_password, verify_password
 from utils.jwt import create_access_token
@@ -135,4 +137,42 @@ def generate_interview(
     return{
         "interview_id": new_interview.id,
         "questions": generated_questions
+    }
+
+@app.post("/interviews/answer")
+def submit_answer(
+    response: InterviewResponseCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)):
+
+    interview = db.query(Interview).filter(Interview.id == response.interview_id,
+                                           Interview.user_id == current_user.id).first()
+
+    if not interview:
+        raise HTTPException(
+            status_code=404,
+            detail="Interview not found")
+
+    if response.question_index < 0 or response.question_index >= len(interview.questions):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid question index")
+
+    question = interview.questions[response.question_index]
+
+    new_response = InterviewResponse(
+        interview_id=interview.id,
+        question_index=response.question_index,
+        question=question,
+        answer=response.answer)
+
+    db.add(new_response)
+    db.commit()
+    db.refresh(new_response)
+
+    return {
+        "message": "Answer submitted successfully",
+        "response_id": new_response.id,
+        "question": question,
+        "answer": new_response.answer
     }

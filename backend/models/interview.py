@@ -15,3 +15,4 @@ class Interview(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     user = relationship("User", back_populates="interviews")
+    responses = relationship("InterviewResponse", back_populates="interview", cascade="all, delete-orphan")

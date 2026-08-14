@@ -9,6 +9,7 @@ from database.database import Base
 from models.user import User
 from models.cv import CV
 from models.interview import Interview 
+from models.interview_response import InterviewResponse
 
 import os 
 from dotenv import load_dotenv
