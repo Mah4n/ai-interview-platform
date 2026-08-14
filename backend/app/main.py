@@ -190,3 +190,63 @@ def submit_answer(
         "weaknesses": new_response.weaknesses,
         "suggested_improvement": new_response.suggested_improvement
     }
+
+@app.get("/interviews/history")
+def get_interview_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)):
+
+    interviews = db.query(Interview).filter(Interview.user_id == current_user.id).order_by(Interview.created_at.desc()).all()
+
+    history = []
+
+    for interview in interviews:
+        history.append({
+            "id": interview.id,
+            "role": interview.role,
+            "difficulty": interview.difficulty,
+            "interview_type": interview.interview_type,
+            "questions": interview.questions,
+            "created_at": interview.created_at,
+
+            "responses": [
+                {
+                    "question_index": response.question_index,
+                    "question": response.question,
+                    "answer": response.answer,
+                    "score": response.score,
+                    "strengths": response.strengths,
+                    "weaknesses": response.weaknesses,
+                    "suggested_improvement": response.suggested_improvement
+                }
+                for response in interview.responses
+            ]
+        })
+
+    return history
+
+@app.get("/analytics")
+def get_analytics(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)):
+
+    interviews = db.query(Interview).filter(Interview.user_id == current_user.id).all()
+    responses = db.query(InterviewResponse).join(Interview).filter(Interview.user_id == current_user.id).all()
+
+    scores = [
+        response.score
+        for response in responses
+        if response.score is not None ]
+
+    average_score = (
+        sum(scores) / len(scores)
+        if scores
+        else 0 )
+
+    return {
+        "interviews_completed": len(interviews),
+        "questions_answered": len(responses),
+        "average_score": round(average_score, 2),
+        "highest_score": max(scores) if scores else 0,
+        "lowest_score": min(scores) if scores else 0
+    }
