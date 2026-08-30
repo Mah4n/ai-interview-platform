@@ -12,7 +12,10 @@ class Interview(Base):
     difficulty = Column(String, nullable=False)
     interview_type = Column(String, nullable=False)
     questions = Column(JSON, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    status = Column(String, nullable=False, default="in_progress")
+    current_question_index = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime(timezone=True), 
+                        default=lambda: datetime.now(timezone.utc))
 
     user = relationship("User", back_populates="interviews")
     responses = relationship("InterviewResponse", 

@@ -27,13 +27,20 @@ useEffect(() => {
             }
 
             setInterview(data)
+
+            if (data.status === "completed") {
+                navigate(`/interview/${id}/results`)
+                return
+            }
+
+            setCurrentQuestion(data.current_question_index)
         } catch (error) {
             console.error(error)
             setError("Could not load interview.")
         }
         }
         getInterview()
-    }, [id])
+    }, [id, navigate])
 
     const handleSubmitAnswer = async () => {
         if(!answer.trim()){

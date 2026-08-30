@@ -14,8 +14,10 @@ def get_analytics(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)):
 
-    interviews = db.query(Interview).filter(Interview.user_id == current_user.id).all()
-    responses = db.query(InterviewResponse).join(Interview).filter(Interview.user_id == current_user.id).all()
+    interviews = db.query(Interview).filter(Interview.user_id == current_user.id,
+                                            Interview.status == "completed").all()
+    responses = db.query(InterviewResponse).join(Interview).filter(Interview.user_id == current_user.id,
+                                                                   Interview.status == "completed").all()
 
     scores = [
         response.score

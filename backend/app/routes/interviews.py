@@ -66,6 +66,17 @@ def submit_answer(
             status_code=400,
             detail="Invalid question index")
 
+    existing_response = db.query(InterviewResponse).filter(
+        InterviewResponse.interview_id == interview.id,
+        InterviewResponse.question_index == response.question_index
+        ).first()
+
+    if existing_response:
+        raise HTTPException(
+            status_code= 400,
+            detail="This question has already been answered"
+        )
+
     question = interview.questions[response.question_index]
 
     feedback = generate_answer_feedback(
@@ -85,8 +96,15 @@ def submit_answer(
         suggested_improvement=feedback["suggested_improvement"])
 
     db.add(new_response)
+
+    interview.current_question_index = response.question_index + 1
+
+    if response.question_index == len(interview.questions) - 1:
+        interview.status = "completed"
+
     db.commit()
     db.refresh(new_response)
+    db.refresh(interview)
 
     return {
         "message": "Answer submitted successfully",
@@ -114,6 +132,8 @@ def get_interview_history(
             "role": interview.role,
             "difficulty": interview.difficulty,
             "interview_type": interview.interview_type,
+            "status": interview.status,
+            "current_question_index": interview.current_question_index,
             "questions": interview.questions,
             "created_at": interview.created_at,
 
@@ -149,6 +169,8 @@ def get_interview(
         "role": interview.role,
         "difficulty": interview.difficulty,
         "interview_type": interview.interview_type,
+        "status": interview.status,
+        "current_question_index": interview.current_question_index,
         "questions": interview.questions,
         "created_at": interview.created_at,
         
@@ -165,3 +187,50 @@ def get_interview(
             for response in interview.responses
         ]
     }
+
+@router.post("/{interview_id}/restart")
+def restart_interview(
+    interview_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    interview = db.query(Interview).filter(
+        Interview.id == interview_id,
+        Interview.user_id == current_user.id
+    ).first()
+
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+
+    db.query(InterviewResponse).filter(
+        InterviewResponse.interview_id == interview.id
+    ).delete()
+
+    interview.status = "in_progress"
+    interview.current_question_index = 0
+
+    db.commit()
+    return {"message": "Interview restarted successfully"} 
+
+@router.delete("/{interview_id}")
+def delete_interview(
+    interview_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    interview = db.query(Interview).filter(
+        Interview.id == interview_id,
+        Interview.user_id == current_user.id
+    ).first()
+
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+
+    db.query(InterviewResponse).filter(
+        InterviewResponse.interview_id == interview.id
+    ).delete()
+
+    db.delete(interview)
+    db.commit()
+
+    return {"message": "Interview deleted successfully"}

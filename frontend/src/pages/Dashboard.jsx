@@ -7,6 +7,7 @@ function Dashboard() {
     const [cvFile, setCvFile] = useState(null)
     const [message, setMessage] = useState("")
     const [currentCv, setCurrentCv] = useState(null)
+    const [analytics, setAnalytics] = useState(null)
 
     useEffect( () => {
         const loadDashboard = async () => {
@@ -32,7 +33,29 @@ function Dashboard() {
                 setCurrentCv(null)
             }
         }
+
+        const getAnalytics = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/analytics", {
+                    method: "GET",
+                    credentials: "include"
+                })
+
+                const data = await response.json()
+
+                if(!response.ok){
+                    console.error(data.detail)
+                    return 
+                }
+
+                setAnalytics(data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
         loadDashboard()
+        getAnalytics()
     }, [])
 
     const getCv = async () => {
@@ -139,7 +162,22 @@ function Dashboard() {
 
             {currentCv && <button onClick={handleDeleteCv}>Delete CV</button> }
 
+            <h2>Your Progress</h2>
+            {analytics.interviews_completed > 0 ? (
+                <div>
+                    <p>Interviews completed: {analytics.interviews_completed}</p>
+                    <p>Questions answered: {analytics.questions_answered}</p>
+                    <p>Average score: {analytics.average_score}/10</p>
+                    <p>Highest score: {analytics.highest_score}/10</p>
+                    <p>Lowest score: {analytics.lowest_score}/10</p>
+                </div>
+            ) : (
+                <p>Complete your first interview to see your performance.</p>
+            )}
+
             <button onClick={() => navigate("/interview/setup")}>Start Interview</button>
+
+            <button onClick={() => navigate("/history")}>Interview History</button>
 
             <button onClick={handleLogout}>Logout</button>
         </div>

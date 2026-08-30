@@ -5,6 +5,7 @@ import Register from "./pages/Register"
 import InterviewSetup from "./pages/InterviewSetup"
 import Interview from "./pages/Interview"
 import InterviewResults from "./pages/InterviewResults"
+import InterviewHistory from "./pages/InterviewHistory"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/interview/setup" element={<ProtectedRoute><InterviewSetup /></ProtectedRoute>} />
         <Route path="/interview/:id" element={<ProtectedRoute><Interview /></ProtectedRoute>} />
         <Route path="/interview/:id/results" element={<ProtectedRoute><InterviewResults /></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><InterviewHistory /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
