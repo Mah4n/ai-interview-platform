@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -17,7 +17,7 @@ def register(user:UserCreate, db: Session = Depends(get_db)):
     existing_user= db.query(User).filter(User.email == user.email).first()
 
     if existing_user:
-        return {"message" : "User already exists"}
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
     
     new_user = User(email=user.email, hashed_password=hash_password(user.password))
     db.add(new_user)
@@ -26,7 +26,9 @@ def register(user:UserCreate, db: Session = Depends(get_db)):
     return {"message" : "User registered successfully"}
 
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session=Depends(get_db)):
+def login(response: Response,
+          form_data: OAuth2PasswordRequestForm = Depends(), 
+          db: Session=Depends(get_db)):
 
     existing_user = db.query(User).filter(User.email == form_data.username).first()
 
@@ -36,9 +38,28 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session=Depends(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
 
     access_token = create_access_token(existing_user.id)
+
+    response.set_cookie(
+        key="access_token", 
+        value=access_token,
+        httponly=True,
+        samesite="lax",
+        secure=False,
+        path="/"
+    )
+
     return {"access_token" : access_token, "token_type" : "bearer"} 
 
 @router.get("/profile")
 def profile(current_user: User=Depends(get_current_user)):
     return {"id":current_user.id, 
-            "email":current_user.email, "created_at":current_user.created_at}
+            "email":current_user.email, 
+            "created_at":current_user.created_at}
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(
+        key="access_token",
+        path="/"
+    )
+    return {"message": "Logged out successfully"}

@@ -132,3 +132,36 @@ def get_interview_history(
         })
 
     return history
+
+@router.get("/{interview_id}")
+def get_interview(
+    interview_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)):
+
+    interview = db.query(Interview).filter(Interview.id == interview_id, Interview.user_id == current_user.id).first()
+
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+
+    return{
+        "id": interview.id,
+        "role": interview.role,
+        "difficulty": interview.difficulty,
+        "interview_type": interview.interview_type,
+        "questions": interview.questions,
+        "created_at": interview.created_at,
+        
+        "responses": [
+            {
+                "question_index": response.question_index,
+                "question": response.question,
+                "answer": response.answer,
+                "score": response.score,
+                "strengths": response.strengths,
+                "weaknesses": response.weaknesses,
+                "suggested_improvement": response.suggested_improvement
+            }
+            for response in interview.responses
+        ]
+    }

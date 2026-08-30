@@ -139,6 +139,8 @@ function Dashboard() {
 
             {currentCv && <button onClick={handleDeleteCv}>Delete CV</button> }
 
+            <button onClick={() => navigate("/interview/setup")}>Start Interview</button>
+
             <button onClick={handleLogout}>Logout</button>
         </div>
     )
