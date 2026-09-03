@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import "./Interview.css"
 
 function Interview(){
     const navigate = useNavigate()
+    const recognitionRef = useRef(null)
     const { id } = useParams()
     const [interview, setInterview] = useState(null)
     const [error, setError] = useState("")
@@ -11,6 +12,7 @@ function Interview(){
     const [answer, setAnswer] = useState("")
     const [feedback, setFeedback] = useState(null)
     const [submitting, setSubmitting] = useState(false)
+    const [isListening, setIsListening] = useState(false)
 
 useEffect(() => {
     const getInterview = async () => {
@@ -44,6 +46,10 @@ useEffect(() => {
     }, [id, navigate])
 
     const handleSubmitAnswer = async () => {
+        if (recognitionRef.current) {
+            recognitionRef.current.stop()
+        }
+
         if(!answer.trim()){
             setError("Please enter an answer before submitting.")
             return
@@ -91,6 +97,64 @@ useEffect(() => {
         navigate(`/interview/${id}/results`)
     }
 
+    const startListening = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+        if (!SpeechRecognition) {
+            alert("Speech recognition is not supported in this browser.")
+            return
+        }
+
+        if (recognitionRef.current) {
+            return
+        }
+
+        const recognition = new SpeechRecognition()
+
+        recognition.lang = "en-GB"
+        recognition.interimResults = false
+        recognition.continuous = true
+
+        recognitionRef.current = recognition
+
+        recognition.onstart = () => {setIsListening(true)}
+
+        recognition.onresult = (event) => {
+            let transcript = ""
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    transcript += event.results[i][0].transcript
+                }
+            }
+
+            if (transcript) {
+                setAnswer((previousAnswer) => {
+                    return previousAnswer
+                        ? `${previousAnswer} ${transcript.trim()}`
+                        : transcript.trim()
+                })
+            }
+        }
+
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error)
+            setIsListening(false)
+            recognitionRef.current = null
+        }
+
+        recognition.onend = () => {setIsListening(false) 
+                                    recognitionRef.current = null}
+
+        recognition.start()
+    }
+
+    const stopListening = () => {
+        if (recognitionRef.current) {
+            recognitionRef.current.stop()
+        }
+    }
+
     return (
         <div className="interview-page">
 
@@ -131,12 +195,23 @@ useEffect(() => {
                             onChange={(event) => setAnswer(event.target.value)}
                             placeholder="Type your answer here..."
                             disabled={feedback !== null}/>
+                        
+                        <div className="answer-actions">
+                            {!feedback && (
+                                <button onClick={handleSubmitAnswer} disabled={submitting}>
+                                {submitting ? "Evaluating..." : "Submit Answer"}
+                                </button>
+                            )}
 
-                        {!feedback && (
-                            <button onClick={handleSubmitAnswer} disabled={submitting}>
-                            {submitting ? "Evaluating..." : "Submit Answer"}
-                            </button>
-                        )}
+                            {!feedback && (
+                                <button 
+                                type="button" 
+                                className="mic-button" 
+                                onClick={isListening ? stopListening : startListening}>
+                                    {isListening ? "Listening..." : "Speak Answer"}
+                                </button>
+                            )}
+                        </div>
 
                         {feedback && (
                             <div className="feedback-section">
