@@ -10,13 +10,7 @@ from models.user import User
 from models.cv import CV
 from models.interview import Interview 
 from models.interview_response import InterviewResponse
-
-import os 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
+from app.config import DATABASE_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

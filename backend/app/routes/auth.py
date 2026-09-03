@@ -9,7 +9,7 @@ from schemas.user import UserCreate, ForgotPasswordRequest, ResetPasswordRequest
 from utils.auth import get_current_user
 from utils.hash import hash_password, verify_password
 from utils.jwt import create_access_token, create_password_reset_token
-from utils.jwt import SECRET_KEY, ALGORITHM
+from app.config import ALGORITHM, ENVIRONMENT, SECRET_KEY
 
 router = APIRouter()
 
@@ -46,7 +46,7 @@ def login(response: Response,
         value=access_token,
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=ENVIRONMENT == "production",
         path="/"
     )
 
@@ -80,7 +80,8 @@ def forgot_password(
 
     reset_link = (f"http://localhost:5173/reset-password?token={reset_token}")
 
-    print(reset_link)
+    if ENVIRONMENT == "development":
+        print(reset_link)
 
     return {"message": "If an account exists for this email, a reset link has been sent."}
 

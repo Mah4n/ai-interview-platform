@@ -2,15 +2,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import auth, cv, analytics, interviews
+from app.config import FRONTEND_URL
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins= ["http://localhost:5173"],
+    allow_origins= [FRONTEND_URL],
     allow_credentials=  True,
-    allow_methods= ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers= ["Content-Type", "Authorization"]
+    allow_methods= ["*"],
+    allow_headers= ["*"]
 )
 
 app.include_router(auth.router)

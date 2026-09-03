@@ -10,6 +10,7 @@ from models.cv import CV
 from models.user import User
 from utils.auth import get_current_user
 from utils.pdf import extract_text_from_pdf
+from app.config import UPLOAD_DIR
 
 router = APIRouter(prefix="/cv", tags=["CV"])
 
@@ -23,7 +24,7 @@ def upload_cv(
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     stored_filename = f"{uuid.uuid4()}.pdf"
 
-    file_path = os.path.join("uploads", stored_filename)
+    file_path = os.path.join(UPLOAD_DIR, stored_filename)
     with open(file_path, "wb") as buffer:
         buffer.write(file.file.read())
 
@@ -32,7 +33,7 @@ def upload_cv(
     existing_cv = db.query(CV).filter(CV.user_id == current_user.id).first()
 
     if existing_cv:
-        old_file_path = os.path.join("uploads", existing_cv.stored_filename)
+        old_file_path = os.path.join(UPLOAD_DIR, existing_cv.stored_filename)
         if os.path.exists(old_file_path):
             os.remove(old_file_path)
 
@@ -85,7 +86,7 @@ def delete_cv(
     if not cv:
         raise HTTPException(status_code= 404, detail= "No CV found")
 
-    file_path = os.path.join("uploads", cv.stored_filename)
+    file_path = os.path.join(UPLOAD_DIR, cv.stored_filename)
     if os.path.exists(file_path):
         os.remove(file_path)
 

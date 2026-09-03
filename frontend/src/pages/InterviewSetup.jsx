@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config"
 import "./InterviewSetup.css"
 
 function InterviewSetup() {
@@ -17,7 +18,7 @@ function InterviewSetup() {
         setLoading(true)
         
         try{
-            const response = await fetch("http://localhost:8000/interviews/generate", {
+            const response = await fetch(`${API_URL}/interviews/generate`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 credentials: "include",

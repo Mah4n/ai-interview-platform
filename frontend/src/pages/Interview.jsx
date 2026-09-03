@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import { API_URL } from "../config"
 import "./Interview.css"
 
 function Interview(){
@@ -17,7 +18,7 @@ function Interview(){
 useEffect(() => {
     const getInterview = async () => {
         try{
-            const response = await fetch(`http://localhost:8000/interviews/${id}`, {
+            const response = await fetch(`${API_URL}/interviews/${id}`, {
                 method: "GET",
                 credentials: "include"}
             )
@@ -59,7 +60,7 @@ useEffect(() => {
         setSubmitting(true)
 
         try {
-            const response = await fetch("http://localhost:8000/interviews/answer", {
+            const response = await fetch(`${API_URL}/interviews/answer`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 credentials: "include",

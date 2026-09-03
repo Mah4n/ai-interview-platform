@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { Navigate } from "react-router-dom"
+import { API_URL } from "../config"
 
 function ProtectedRoute({ children }){
     const [authenticated, setAuthenticated] = useState(null)
 
     useEffect(() => {
         const checkAuth = async () => {
-            const response = await fetch("http://localhost:8000/profile", {
+            const response = await fetch(`${API_URL}/profile`, {
                 method: "GET",
                 credentials: "include"
             })

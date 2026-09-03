@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { API_URL } from "../config"
 import "./InterviewResults.css"
 
 function InterviewResults() {
@@ -12,7 +13,7 @@ function InterviewResults() {
     useEffect(() => {
         const getInterview = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/interviews/${id}`, {
+                const response = await fetch(`${API_URL}/interviews/${id}`, {
                     method: "GET",
                     credentials: "include"
                 })

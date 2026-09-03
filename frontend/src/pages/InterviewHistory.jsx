@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { API_URL } from "../config"
 import "./InterviewHistory.css"
 
 function InterviewHistory() {
@@ -10,7 +11,7 @@ function InterviewHistory() {
     useEffect (() => {
         const getHistory = async () => {
             try {
-                const response = await fetch("http://localhost:8000/interviews/history",
+                const response = await fetch(`${API_URL}/interviews/history`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -39,7 +40,7 @@ function InterviewHistory() {
 
         if(!confirmed){return}
 
-        const response = await fetch(`http://localhost:8000/interviews/${interviewId}/restart`, {
+        const response = await fetch(`${API_URL}/interviews/${interviewId}/restart`, {
             method: "POST",
             credentials: "include"
         })
@@ -58,7 +59,7 @@ function InterviewHistory() {
 
         if(!confirmed){return}
 
-        const response = await fetch(`http://localhost:8000/interviews/${interviewId}`, {
+        const response = await fetch(`${API_URL}/interviews/${interviewId}`, {
             method: "DELETE",
             credentials: "include"
         })

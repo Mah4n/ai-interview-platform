@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { API_URL } from "../config"
 import "./Dashboard.css"
 
 function Dashboard() {
@@ -12,7 +13,7 @@ function Dashboard() {
 
     useEffect( () => {
         const loadDashboard = async () => {
-            const profileResponse = await fetch("http://localhost:8000/profile", {
+            const profileResponse = await fetch(`${API_URL}/profile`, {
                 method: "GET",
                 credentials: "include"
             })
@@ -22,7 +23,7 @@ function Dashboard() {
                 setUser(data)
             }
 
-            const cvResponse = await fetch("http://localhost:8000/cv", {
+            const cvResponse = await fetch(`${API_URL}/cv`, {
                 method: "GET",
                 credentials: "include"
             })
@@ -37,7 +38,7 @@ function Dashboard() {
 
         const getAnalytics = async () => {
             try {
-                const response = await fetch("http://localhost:8000/analytics", {
+                const response = await fetch(`${API_URL}/analytics`, {
                     method: "GET",
                     credentials: "include"
                 })
@@ -60,7 +61,7 @@ function Dashboard() {
     }, [])
 
     const getCv = async () => {
-            const response = await fetch("http://localhost:8000/cv", {
+            const response = await fetch(`${API_URL}/cv`, {
                 method: "GET",
                 credentials: "include"
             })
@@ -82,7 +83,7 @@ function Dashboard() {
         const formData = new FormData()
         formData.append("file", cvFile)
 
-        const response = await fetch("http://localhost:8000/cv/upload", {
+        const response = await fetch(`${API_URL}/cv/upload`, {
             method: "POST",
             credentials: "include",
             body: formData
@@ -99,7 +100,7 @@ function Dashboard() {
     }
 
     const handleLogout = async () => {
-        await fetch ("http://localhost:8000/logout", {
+        await fetch (`${API_URL}/logout`, {
             method: "POST",
             credentials: "include"
         })
@@ -107,7 +108,7 @@ function Dashboard() {
     }
 
     const handleDeleteCv = async () => {
-        const response = await fetch ("http://localhost:8000/cv", {
+        const response = await fetch (`${API_URL}/cv`, {
             method: "DELETE",
             credentials: "include"
         })
