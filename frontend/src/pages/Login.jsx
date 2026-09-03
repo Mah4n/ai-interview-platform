@@ -66,6 +66,10 @@ function Login(){
                         />
                     </div>
 
+                    <button type="button" className="forgot-password-link" onClick={() => navigate("/forgot-password")}>
+                        Forgot Password? 
+                    </button>
+
                     {error && <p className="auth-error">{error}</p>}
 
                     <button className="auth-submit" type="submit">Login</button>

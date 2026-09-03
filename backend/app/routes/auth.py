@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from jose import jwt, JWTError
 
 from database.database import get_db
 from models.user import User
-from schemas.user import UserCreate
+from schemas.user import UserCreate, ForgotPasswordRequest, ResetPasswordRequest
 from utils.auth import get_current_user
 from utils.hash import hash_password, verify_password
-from utils.jwt import create_access_token
+from utils.jwt import create_access_token, create_password_reset_token
+from utils.jwt import SECRET_KEY, ALGORITHM
 
 router = APIRouter()
 
@@ -63,3 +65,53 @@ def logout(response: Response):
         path="/"
     )
     return {"message": "Logged out successfully"}
+
+@router.post("/forgot-password")
+def forgot_password(
+    request: ForgotPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.email == request.email).first()
+
+    if not user:
+        return {"message": "If an account exists for this email, a reset link has been sent."}
+
+    reset_token = create_password_reset_token(user.email)
+
+    reset_link = (f"http://localhost:5173/reset-password?token={reset_token}")
+
+    print(reset_link)
+
+    return {"message": "If an account exists for this email, a reset link has been sent."}
+
+@router.post("/reset-password")
+def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        payload = jwt.decode(
+            request.token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+
+    if payload.get("purpose") != "password_reset":
+        raise HTTPException(status_code=400, detail="Invalid reset token")
+
+    email = payload.get("sub")
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid reset token")
+
+    user = db.query(User).filter(User.email == email).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.hashed_password = hash_password(request.new_password)
+
+    db.commit()
+
+    return {"message": "Password reset successfully"}

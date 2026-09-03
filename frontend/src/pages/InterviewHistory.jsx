@@ -35,6 +35,10 @@ function InterviewHistory() {
 
 
     const handleRestart = async (interviewId) => {
+        const confirmed = window.confirm("Are you sure you want to restart this interview?")
+
+        if(!confirmed){return}
+
         const response = await fetch(`http://localhost:8000/interviews/${interviewId}/restart`, {
             method: "POST",
             credentials: "include"

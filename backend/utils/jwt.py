@@ -23,3 +23,18 @@ def decode_access_token(token: str) -> int:
         raise ValueError("Token does not contain a valid user ID")
 
     return int(user_id) 
+
+def create_password_reset_token(email: str):
+    expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+    payload = {
+        "sub": email,
+        "purpose": "password_reset",
+        "exp": expire
+    }
+
+    return jwt.encode(
+        payload,
+        SECRET_KEY,
+        algorithm=ALGORITHM
+    )

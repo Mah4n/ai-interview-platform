@@ -53,6 +53,25 @@
   color: #93c5fd;
 }
 
+.forgot-password-link {
+  background: none;
+  padding: 0;
+  margin: -4px 0 8px;
+  color: #60a5fa;
+  font-size: 0.9rem;
+  align-self: flex-start;
+}
+
+.forgot-password-link:hover {
+  background: none;
+  color: #93c5fd;
+}
+
+.auth-success {
+  color: #86efac;
+  margin-bottom: 16px;
+}
+
 @media (max-width: 500px) {
   .auth-card {
     padding: 28px 22px;
