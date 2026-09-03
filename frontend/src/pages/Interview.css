@@ -1,0 +1,168 @@
+.interview-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+}
+
+.interview-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.interview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.interview-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.interview-header p {
+  margin: 6px 0 0;
+  color: #a1a1aa;
+}
+
+.question-count {
+  color: #a1a1aa;
+  white-space: nowrap;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #2a2e38;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #2563eb;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.question-card {
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.question-label {
+  margin: 0 0 8px;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.question-card h2 {
+  margin: 0 0 28px;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.question-card label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.question-card textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 14px;
+  resize: vertical;
+
+  background-color: #111318;
+  color: white;
+
+  border: 1px solid #343844;
+  border-radius: 8px;
+
+  outline: none;
+  margin-bottom: 16px;
+}
+
+.question-card textarea:focus {
+  border-color: #3b82f6;
+}
+
+.question-card textarea:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.feedback-section {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid #2a2e38;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.feedback-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.score {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.feedback-item {
+  background-color: #111318;
+  border: 1px solid #2a2e38;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.feedback-item h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.feedback-item p {
+  margin: 0;
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+.feedback-section > button {
+  margin-top: 12px;
+}
+
+.interview-error {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  color: #f87171;
+}
+
+@media (max-width: 700px) {
+  .interview-page {
+    padding: 32px 18px;
+  }
+
+  .interview-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .question-card {
+    padding: 22px;
+  }
+}

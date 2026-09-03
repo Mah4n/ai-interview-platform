@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import "./Interview.css"
 
 function Interview(){
     const navigate = useNavigate()
@@ -91,49 +92,89 @@ useEffect(() => {
     }
 
     return (
-        <div>
-            <h1>Interview</h1>
-            <p>Interview ID: {id}</p>
+        <div className="interview-page">
 
-            {error && <p>{error}</p>}
+            {error && <p className="interview-error">{error}</p>}
 
             {!interview ? (
                 <p>Loading interview...</p>
             ) : (
-                <div>
-                    <p>{currentQuestion+1} of {interview.questions.length}</p>
-                    <h2>{interview.questions[currentQuestion]}</h2>
+                <div className="interview-container">
+
+                    <header className="interview-header">
+                    <div>
+                        <h1>{interview.role}</h1>
+                        <p>{interview.difficulty} · {interview.interview_type}</p>
+                    </div>
+
+                    <span className="question-count">
+                        Question {currentQuestion + 1} of {interview.questions.length}
+                    </span>
+                    </header>
+
+                    <div className="progress-bar">
+                        <div
+                            className="progress-fill"
+                            style={{width: `${((currentQuestion + 1) / interview.questions.length) * 100}%`}}/>
+                        </div>
+
+                    <main className="question-card">
+                        <p className="question-label">Question {currentQuestion + 1}</p>
+
+                        <h2>{interview.questions[currentQuestion]}</h2>
+
+                        <label htmlFor="answer">Your Answer</label>
+
+                        <textarea
+                            id="answer"
+                            value={answer}
+                            onChange={(event) => setAnswer(event.target.value)}
+                            placeholder="Type your answer here..."
+                            disabled={feedback !== null}/>
+
+                        {!feedback && (
+                            <button onClick={handleSubmitAnswer} disabled={submitting}>
+                            {submitting ? "Evaluating..." : "Submit Answer"}
+                            </button>
+                        )}
+
+                        {feedback && (
+                            <div className="feedback-section">
+
+                                <div className="feedback-header">
+                                    <h3>AI Feedback</h3>
+                                    <span className="score">
+                                    {feedback.score}/10
+                                    </span>
+                                </div>
+
+                                <div className="feedback-item">
+                                    <h4>Strengths</h4>
+                                    <p>{feedback.strengths}</p>
+                                </div>
+
+                                <div className="feedback-item">
+                                    <h4>Areas to Improve</h4>
+                                    <p>{feedback.weaknesses}</p>
+                                </div>
+
+                                <div className="feedback-item">
+                                    <h4>Suggested Improvement</h4>
+                                    <p>{feedback.suggested_improvement}</p>
+                                </div>
+
+                                {currentQuestion < interview.questions.length - 1 ? (
+                                    <button onClick={handleNextQuestion}>Next Question</button>
+                                ) : (
+                                    <button onClick={handleFinishInterview}>Finish Interview</button>
+                                )}
+                            </div>
+                        )}
+                    </main>
                 </div>
             )}
-
-            <textarea 
-            value={answer}
-            onChange={(event) => setAnswer(event.target.value)}
-            placeholder="Type your answer here..."
-            />
-
-            <button onClick={handleSubmitAnswer} disabled={submitting || feedback}>
-                {submitting ? "Evaluating..." : "Submit Answer"}
-            </button>
-
-            {feedback && (
-                <div>
-                    <h3>Feedback</h3>
-                    <p>Score: {feedback.score}/10</p>
-                    <p><strong>Strengths:</strong>{feedback.strengths}</p>
-                    <p><strong>Weaknesses:</strong>{feedback.weaknesses}</p>
-                    <p><strong>Suggested improvement:</strong>{" "}{feedback.suggested_improvement}</p>
-                </div>
-            )}
-
-            {feedback && (
-                currentQuestion < interview.questions.length-1 ? (
-                <button onClick={handleNextQuestion}>Next Question</button>
-            ) : (
-                <button onClick={handleFinishInterview}>Finish Interview</button>
-            ))}
         </div>
-    )  
+    )
 }
 
 export default Interview

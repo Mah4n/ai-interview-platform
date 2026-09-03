@@ -1,0 +1,75 @@
+.setup-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 20px;
+}
+
+.setup-card {
+  width: 100%;
+  max-width: 600px;
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 16px;
+  padding: 36px;
+}
+
+.setup-card h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 2rem;
+}
+
+.setup-subtitle {
+  margin-top: 0;
+  margin-bottom: 28px;
+  color: #a1a1aa;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #343844;
+  border-radius: 8px;
+  background-color: #111318;
+  color: white;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+}
+
+.setup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.secondary-button {
+  background-color: #2a2e38;
+}
+
+.secondary-button:hover {
+  background-color: #343844;
+}
+
+.setup-error {
+  color: #f87171;
+  margin-top: 8px;
+}

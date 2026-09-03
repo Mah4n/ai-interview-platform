@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import "./InterviewHistory.css"
 
 function InterviewHistory() {
     const [interviews, setInterviews] = useState([])
@@ -69,41 +70,78 @@ function InterviewHistory() {
     }
 
     return (
-        <div>
-            <h1>Interview History</h1>
+        <div className="history-page">
+            <div className="history-container">
 
-            {error && <p>{error}</p>}
+                <header className="history-header">
+                    <div>
+                        <h1>Interview History</h1>
+                        <p>Review completed interviews or continue where you left off.</p>
+                    </div>
 
-            {interviews.length == 0 ? (
-                <p>No interviews completed yet.</p>
-            ) : (
-                interviews.map((interview) => (
-                    <div key={interview.id}> 
-                        <h2>{interview.role}</h2>
+                    <button onClick={() => navigate("/dashboard")} className="secondary-button">
+                        Back to Dashboard
+                    </button> 
+                </header>
 
-                        <p>Difficulty: {interview.difficulty}</p>
-                        <p>Type: {interview.interview_type}</p>
+                {error && <p className="history-error">{error}</p>}
 
-                        {interview.status == "completed" ? (
-                            <button onClick={() => navigate(`/interview/${interview.id}/results`)}>
-                                View Results
-                            </button>
-                        ) : (
-                            <button onClick={() => navigate(`/interview/${interview.id}`)}>
-                                Continue Interview
-                            </button>
-                        )}
+                {interviews.length == 0 ? (
+                    <div className="empty-history">
+                        <h2>No interviews yet.</h2>
+                        <p>Start your first interview to see it appear here.</p>
 
-                        <button onClick={() => handleRestart(interview.id)}>
-                            Restart Interview
-                        </button>
-
-                        <button onClick={() => handleDelete(interview.id)}>
-                            Delete Interview
+                        <button onClick={() => navigate("/interview/setup")}>
+                            Start Interview 
                         </button>
                     </div>
-                ))
-            )}
+                ) : (
+                    <div className="history-list">
+
+                        {interviews.map((interview) => (
+
+                            <div className="history-card" key={interview.id}>
+
+                                <div className="history-card-header"> 
+                                    <div>
+                                        <h2>{interview.role}</h2>
+                                        <p>{interview.difficulty} . {interview.interview_type}</p>
+                                    </div>
+
+                                    <span 
+                                        className={
+                                            interview.status === "completed" 
+                                            ? "status-badge completed"
+                                            : "status-badge in-progress"}>
+                                        {interviews.status === "completed" ? "Completed": "In Progress"}
+                                    </span>
+                                </div>
+
+                                <div className="history-actions">
+
+                                    {interview.status == "completed" ? (
+                                        <button onClick={() => navigate(`/interview/${interview.id}/results`)}>
+                                            View Results
+                                        </button>
+                                    ) : (
+                                        <button onClick={() => navigate(`/interview/${interview.id}`)}>
+                                            Continue Interview
+                                        </button>
+                                    )}
+
+                                    <button className="secondary-button" onClick={() => handleRestart(interview.id)}>
+                                        Restart 
+                                    </button>
+
+                                    <button className="delete-button" onClick={() => handleDelete(interview.id)}>
+                                        Delete 
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

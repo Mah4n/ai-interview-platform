@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "./InterviewResults.css"
 
 function InterviewResults() {
     const { id } = useParams()
@@ -48,49 +49,81 @@ function InterviewResults() {
         : 0
 
     return (
-        <div>
-            <h1>Interview Complete</h1>
+        <div className="results-page">
+            <div className="results-container">
 
-            <p>Role: {interview.role}</p>
-            <p>Difficulty: {interview.difficulty}</p>
-            <p>Type: {interview.interview_type}</p>
+                <header className="results-header">
+                    <div>
+                        <h1>Interview Complete</h1>
+                        <p>{interview.role} . {interview.difficulty} . {interview.interview_type}</p>
+                    </div>
 
-            <h2>Overall Score: {avgScore.toFixed(1)}/10</h2>
+                    <div className="overall-score">
+                        <span>{avgScore.toFixed(1)}</span>
+                        <p>Overall / 10</p>
+                    </div>
+                </header>
 
-            <h2>Question Feedback</h2>
+                <section className="results-summary">
+                    <div>
+                        <span className="summary-number">{interview.responses.length}</span>
+                        <span className="summary-label">Questions Answered</span>
+                    </div>
 
-            {interview.responses.map((response) => (
-                <div key={response.question_index}>
-                <h3>
-                    Question {response.question_index + 1}
-                </h3>
+                    <div>
+                        <span className="summary-number">
+                            {Math.max(...interview.responses.map(response => response.score))}
+                        </span>
+                        <span className="summary-label">Highest score</span>
+                    </div>
+                </section>
 
-                <p>{response.question}</p>
+                <h2 className="feedback-title">Question Feedback</h2>
 
-                <p>
-                    <strong>Your answer:</strong> {response.answer}
-                </p>
+                <div className="results-list">
+                    {interview.responses.map((response) => (
+                        <div className="result-card" key={response.question_index}>
 
-                <p>
-                    <strong>Score:</strong> {response.score}/10
-                </p>
+                            <div className="result-card-header">
+                                <span>Question {response.question_index + 1}</span>
+                                <span className="result-score">{response.score}/10</span>
+                            </div>
 
-                <p>
-                    <strong>Strengths:</strong> {response.strengths}
-                </p>
+                            <h3>{response.question}</h3>
 
-                <p>
-                    <strong>Weaknesses:</strong> {response.weaknesses}
-                </p>
+                            <div className="result-section">
+                                <h4>Your Answer</h4> 
+                                <p>{response.answer}</p>
+                            </div>
 
-                <p>
-                    <strong>Suggested improvement:</strong>{" "}
-                    {response.suggested_improvement}
-                </p>
+                           <div className="result-section">
+                                <h4>Strengths</h4> 
+                                <p>{response.strengths}</p>
+                            </div>
+
+                            <div className="result-section">
+                                <h4>Areas to Improve</h4> 
+                                <p>{response.weaknesses}</p>
+                            </div>
+
+                            <div className="result-section">
+                                <h4>Suggested improvement</h4>
+                                <p>{response.suggested_improvement}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            ))}
 
-            <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+                <div className="results-actions">
+                    <button onClick={() => navigate("/history")}>
+                        Interview History
+                    </button>
+
+                    <button className="secondary-button" onClick={() => navigate("/dashboard")}>
+                        Back to Dashboard
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }

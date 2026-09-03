@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import "./Dashboard.css"
 
 function Dashboard() {
     const navigate = useNavigate()
@@ -124,62 +125,102 @@ function Dashboard() {
     }
 
     return(
-        <div>
-            <h1>Dashboard</h1>
+        <div className="dashboard-page">
 
-            {user ? (
+            <header className="dashboard-header">
                 <div>
-                    <p>Welcome, {user.email}</p>
-                    <p>User ID: {user.id}</p>
+                    <h1>Dashboard</h1>
+                    {user ? (
+                        <p>Welcome, {user.email}</p>
+                    ) : (
+                        <p>Loading profile...</p>
+                    )}
                 </div>
-            ) : (
-                <p>Loading profile...</p>
-            )}
 
-            <div> 
-                <h2>Your CV</h2>
+                <button onClick={handleLogout}>Logout</button>
+            </header>
 
-                {currentCv ? (
-                    <div>
-                        <p>Current CV: {currentCv.original_filename}</p>
-                        <p>Uploaded: {new Date(currentCv.uploaded_at).toLocaleDateString()}</p>
+
+            <section className="dashboard-grid">
+
+                <div className="dashboard-card">
+                    <h2>Start Interview</h2>
+                    <p>Generate a tailored interview based on your CV and chosen role.</p>
+                    <button onClick={() => navigate("/interview/setup")}>Start Interview</button>
+                </div>
+
+
+                <div className="dashboard-card">
+                    <h2>Interview History</h2>
+                    <p>View previous interviews or continue an unfinished one.</p>
+                    <button onClick={() => navigate("/history")}>Interview History</button>
+                </div>
+
+
+                <div className="dashboard-card"> 
+                    <h2>Your CV</h2>
+                    {currentCv ? (
+                        <div>
+                            <p>Current CV: {currentCv.original_filename}</p>
+                            <p>Uploaded: {new Date(currentCv.uploaded_at).toLocaleDateString()}</p>
+                        </div>
+                    ) : (
+                        <p>No CV uploaded yet.</p>
+                    )}
+
+                    <input 
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(event) => setCvFile(event.target.files[0])}/>
+
+                    <div className="cv-actions">
+                        <button onClick={handleCvUpload}>
+                            {currentCv ? "Replace CV" : "Upload CV"}
+                        </button>
+                        
+                        {currentCv && <button onClick={handleDeleteCv}>Delete CV</button> }
                     </div>
-                ) : (
-                    <p>No CV uploaded yet.</p>
-                )}
-
-                <input 
-                type="file"
-                accept="application/pdf"
-                onChange={(event) => setCvFile(event.target.files[0])}/>
-
-                <button onClick={handleCvUpload}>
-                    {currentCv ? "Replace CV" : "Upload CV"}
-                </button>
-                
-                {message && <p>{message}</p>}
-            </div>
-
-            {currentCv && <button onClick={handleDeleteCv}>Delete CV</button> }
-
-            <h2>Your Progress</h2>
-            {analytics.interviews_completed > 0 ? (
-                <div>
-                    <p>Interviews completed: {analytics.interviews_completed}</p>
-                    <p>Questions answered: {analytics.questions_answered}</p>
-                    <p>Average score: {analytics.average_score}/10</p>
-                    <p>Highest score: {analytics.highest_score}/10</p>
-                    <p>Lowest score: {analytics.lowest_score}/10</p>
                 </div>
-            ) : (
-                <p>Complete your first interview to see your performance.</p>
-            )}
 
-            <button onClick={() => navigate("/interview/setup")}>Start Interview</button>
 
-            <button onClick={() => navigate("/history")}>Interview History</button>
+                <div className="dashboard-card">
+                    <h2>Your Progress</h2>
+                    {analytics ? (
+                        analytics.interviews_completed > 0 ? (
+                            <div className="analytics-grid">
 
-            <button onClick={handleLogout}>Logout</button>
+                                <div className="analytics-stat">
+                                    <span className="analytics-number">{analytics.interviews_completed}</span>
+                                    <span className="analytics-label">Interviews</span>
+                                </div>
+
+                                <div className="analytics-stat">
+                                    <span className="analytics-number">{analytics.questions_answered}</span>
+                                    <span className="analytics-label">Questions</span>
+                                </div>
+
+                                <div className="analytics-stat">
+                                    <span className="analytics-number">{analytics.average_score.toFixed(1)}</span>
+                                    <span className="analytics-label">Average / 10</span>
+                                </div>
+
+                                <div className="analytics-stat">
+                                    <span className="analytics-number">{analytics.highest_score.toFixed(1)}</span>
+                                    <span className="analytics-label">Highest / 10</span>
+                                </div>
+                    
+                            </div>
+                        ) : (
+                            <p>Complete your first interview to see your performance.</p>
+                        ) 
+                    ) :(
+                        <p>Loading analytics...</p>
+                    )}
+                </div>
+
+
+            </section>
+            {message && <p>{message}</p>}
         </div>
     )
 }

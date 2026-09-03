@@ -1,0 +1,126 @@
+.history-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+}
+
+.history-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.history-header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.history-header p {
+  margin: 6px 0 0;
+  color: #a1a1aa;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.history-card {
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 16px;
+  padding: 26px;
+}
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.history-card h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.history-card p {
+  margin: 6px 0 0;
+  color: #a1a1aa;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.completed {
+  background-color: #14532d;
+  color: #bbf7d0;
+}
+
+.status-badge.in-progress {
+  background-color: #78350f;
+  color: #fde68a;
+}
+
+.history-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.delete-button {
+  background-color: #7f1d1d;
+}
+
+.delete-button:hover {
+  background-color: #991b1b;
+}
+
+.empty-history {
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+}
+
+.empty-history h2 {
+  margin-top: 0;
+}
+
+.empty-history p {
+  color: #a1a1aa;
+}
+
+.history-error {
+  color: #f87171;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .history-page {
+    padding: 32px 18px;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-card-header {
+    flex-direction: column;
+  }
+}

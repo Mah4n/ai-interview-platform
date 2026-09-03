@@ -1,0 +1,153 @@
+.results-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+}
+
+.results-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.results-header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.results-header p {
+  margin: 6px 0 0;
+  color: #a1a1aa;
+}
+
+.overall-score {
+  min-width: 130px;
+  padding: 18px;
+  text-align: center;
+
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 14px;
+}
+
+.overall-score span {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.overall-score p {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+}
+
+.results-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.results-summary > div {
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.summary-label {
+  margin-top: 4px;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+
+.feedback-title {
+  margin-bottom: 18px;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-card {
+  background-color: #181b22;
+  border: 1px solid #2a2e38;
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.result-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.result-score {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.result-card h3 {
+  margin-top: 0;
+  margin-bottom: 22px;
+  line-height: 1.4;
+}
+
+.result-section {
+  background-color: #111318;
+  border: 1px solid #2a2e38;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.result-section h4 {
+  margin: 0 0 6px;
+}
+
+.result-section p {
+  margin: 0;
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+.results-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+@media (max-width: 700px) {
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .results-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .results-actions {
+    flex-direction: column;
+  }
+}

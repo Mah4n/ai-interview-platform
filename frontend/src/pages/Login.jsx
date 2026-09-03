@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import "./Auth.css"
 
 function Login(){
     const navigate = useNavigate()
@@ -34,31 +35,49 @@ function Login(){
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
+        <div className="auth-page">
+            <div className="auth-card">
+                <h1>Welcome Back</h1>
+                <p className="auth-subtitle">Sign in to continue your interview preparation.</p>
 
-                <div>
-                    <label>Email</label>
-                    <input 
-                    type="email" 
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    />
-                </div>
+                <form onSubmit={handleSubmit}>
 
-                <div>
-                    <label>Password</label>
-                    <input 
-                    type="password" 
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input 
+                        id="email"
+                        type="email" 
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="you@example.com"
+                        required
+                        />
+                    </div>
 
-                <button type="submit">Login</button>
-            </form>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input 
+                        id = "password"
+                        type="password" 
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Enter your password"
+                        required
+                        />
+                    </div>
+
+                    {error && <p className="auth-error">{error}</p>}
+
+                    <button className="auth-submit" type="submit">Login</button>
+                </form>
+
+                <p className="auth-switch">
+                    Don't have an account?{" "}
+                    <button type="button" className="text-button" onClick={() => navigate("/register")}>
+                        Register
+                    </button>
+                </p>
+            </div>
         </div>
     )
 }

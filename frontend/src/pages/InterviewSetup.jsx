@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./InterviewSetup.css"
 
 function InterviewSetup() {
     const navigate = useNavigate()
@@ -43,49 +44,64 @@ function InterviewSetup() {
     }
 
     return (
-        <div>
-            <h1>Start an Interview</h1>
+        <div className="setup-page">
 
-            {error && <p>{error}</p>}
+            <div className="setup-card">
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Role</label>
+                <h1>Set Up Interview</h1>
+                <p className="setup-subtitle">Choose the role, difficulty and interview type.</p>
 
-                    <input 
-                    type="text"
-                    value={role}
-                    onChange = {(event) => setRole(event.target.value)}
-                    placeholder="e.g. Software Engineer"/>
-                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Role</label>
+                        <input 
+                        type="text"
+                        value={role}
+                        onChange = {(event) => setRole(event.target.value)}
+                        placeholder="e.g. Software Engineer"
+                        required/>
+                    </div>
 
-                <div>
-                    <label>Difficulty</label>
-                    <select
-                    value={difficulty}
-                    onChange={(event) => setDifficulty(event.target.value)}>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
-                    </select>
-                </div>
+                    <div className="form-group">
+                        <label>Difficulty</label>
+                        <select
+                        value={difficulty}
+                        onChange={(event) => setDifficulty(event.target.value)}>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <label>Interview Type</label>
+                    <div className="form-group">
+                        <label>Interview Type</label>
 
-                    <select
-                    value={interviewType}
-                    onChange={(event) => setInterviewType(event.target.value)}>
-                        <option value="Technical">Technical</option>
-                        <option value="Behavioural">Behavioural</option>
-                        <option value="Mixed">Mixed</option>
-                    </select>
-                </div>
+                        <select
+                        value={interviewType}
+                        onChange={(event) => setInterviewType(event.target.value)}>
+                            <option value="Technical">Technical</option>
+                            <option value="Behavioural">Behavioural</option>
+                            <option value="Mixed">Mixed</option>
+                        </select>
+                    </div>
 
-                <button type="submit" disabled={loading}>
-                    {loading ? "Generating..." : "Generate Interview"}
-                </button>
-            </form>
+                    {error && <p className="setup-error">{error}</p>}
+
+                    <div className="setup-actions">
+
+                        <button type="button" 
+                        disabled={loading} 
+                        className="secondary-button" 
+                        onClick={() => navigate("/dashboard")}>
+                            Back
+                        </button>
+
+                        <button type="submit" disabled={loading}>
+                            {loading ? "Generating..." : "Generate Interview"}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     )
 }
