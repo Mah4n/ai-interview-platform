@@ -72,6 +72,14 @@
   margin-bottom: 16px;
 }
 
+.auth-brand {
+  margin: 0 0 14px;
+  color: #60a5fa;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 500px) {
   .auth-card {
     padding: 28px 22px;

@@ -141,6 +141,14 @@ function InterviewHistory() {
                                     <button className="delete-button" onClick={() => handleDelete(interview.id)}>
                                         Delete 
                                     </button>
+
+                                    <p className="interview-date">
+                                        {new Date(interview.created_at).toLocaleDateString("en-GB", {
+                                            day: "numeric", month: "short", year: "numeric"})}
+                                        {" . "}
+                                        {new Date(interview.created_at).toLocaleTimeString("en-GB", {
+                                            hour: "2-digit", minute: "2-digit"})}
+                                    </p>
                                 </div>
                             </div>
                         ))}

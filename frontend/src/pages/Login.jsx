@@ -38,6 +38,8 @@ function Login(){
     return (
         <div className="auth-page">
             <div className="auth-card">
+                
+                <div className="auth-brand">PrepSprint</div>
                 <h1>Welcome Back</h1>
                 <p className="auth-subtitle">Sign in to continue your interview preparation.</p>
 

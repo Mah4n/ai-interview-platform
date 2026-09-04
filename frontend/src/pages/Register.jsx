@@ -37,6 +37,7 @@ function Register() {
         <div className="auth-page">
             <div className="auth-card">
 
+                <div className="auth-brand">PrepSprint</div>
                 <h1>Create Account</h1>
                 <p className="auth-subtitle">Create an account to start practising tailored interviews.</p>
 

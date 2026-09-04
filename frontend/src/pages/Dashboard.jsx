@@ -130,7 +130,7 @@ function Dashboard() {
 
             <header className="dashboard-header">
                 <div>
-                    <h1>Dashboard</h1>
+                    <h1>PrepSprint</h1>
                     {user ? (
                         <p>Welcome, {user.email}</p>
                     ) : (
