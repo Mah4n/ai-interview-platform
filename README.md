@@ -70,7 +70,7 @@ PrepSprint uses Argon2 password hashing, JWT authentication stored in HttpOnly c
 
 PrepSprint is designed to be self-hosted using a Raspberry Pi with Nginx, FastAPI, PostgreSQL, and HTTPS.
 
-**Live Demo:** Coming soon
+**Live Demo:** prepsprint.mah-noor.com/login 
 
 ## Future Improvements
 
